@@ -86,7 +86,7 @@
                 SelectedItem="{x:Bind ViewModel.Selected, Mode=TwoWay}"
                 MinHeight="200"
                 SelectionChanged="ListDetailsViewControl_OnSelectionChanged"/>
-            <MediaPlayerElement Grid.Row="1" VerticalAlignment="Bottom" MinHeight="175" Name="PlayerElement" AreTransportControlsEnabled="True"/>
+            <MediaPlayerElement Grid.Row="1" VerticalAlignment="Bottom" Name="PlayerElement" AreTransportControlsEnabled="True"/>
         </Grid>
     </Grid>
 </Page>

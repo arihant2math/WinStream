@@ -46,8 +46,7 @@ public class DataSourceSelectorService : IDataSourceSelectorService
             return split.ToList();
         }
 
-        var defaultList = new List<string>();
-        defaultList.Add(Environment.GetFolderPath(Environment.SpecialFolder.MyMusic));
+        var defaultList = new List<string> { Environment.GetFolderPath(Environment.SpecialFolder.MyMusic) };
         return defaultList;
     }
 

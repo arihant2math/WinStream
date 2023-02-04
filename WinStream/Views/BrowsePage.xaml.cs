@@ -29,9 +29,11 @@ public sealed partial class BrowsePage : Page
     {
         var ensureCorrectInstallation = Downloader.EnsureCorrectInstallation();
         ProgressBar.Visibility = Visibility.Visible;
-        var filePicker = new FileSavePicker();
-        filePicker.SuggestedStartLocation = PickerLocationId.MusicLibrary;
-        filePicker.CommitButtonText = "Download";
+        var filePicker = new FileSavePicker
+        {
+            SuggestedStartLocation = PickerLocationId.MusicLibrary,
+            CommitButtonText = "Download"
+        };
         var li = new List<string>
         {
             ".mp3"
@@ -52,12 +54,14 @@ public sealed partial class BrowsePage : Page
             if (url != null)
             {
                 await Downloader.EnsureCorrectInstallation();
-                var downloader = new Downloader();
-                downloader.Url = url;
-                downloader.Output = file.ToString();
-                downloader.AudioFormat = Downloader.AudioFormats.Mp3;
-                downloader.AudioOnly = true;
-                downloader.EmbedThumbnail = true;
+                var downloader = new Downloader
+                {
+                    Url = url,
+                    Output = file.ToString(),
+                    AudioFormat = Downloader.AudioFormats.Mp3,
+                    AudioOnly = true,
+                    EmbedThumbnail = true
+                };
                 await downloader.Download();
             }
         }

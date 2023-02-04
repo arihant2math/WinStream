@@ -1,12 +1,8 @@
 using System.Diagnostics;
-using System.Diagnostics.Contracts;
-using System.Net;
-using System.Runtime.InteropServices;
-using Microsoft.Win32;
 
-namespace WinStream.Core;
+namespace WinStream.Core.Services;
 
-public class Downloader
+public class DownloaderService
 {
     private static string _exeFolder =
         Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),
@@ -56,9 +52,17 @@ public class Downloader
         set;
     }
 
-    public bool AudioOnly { get; set; } = false;
+    public bool AudioOnly
+    {
+        get; 
+        set;
+    }
 
-    public bool EmbedThumbnail { get; set; } = false;
+    public bool EmbedThumbnail
+    {
+        get;
+        set;
+    }
 
     public enum AudioFormats
     {
@@ -129,42 +133,25 @@ public class Downloader
             args += " --embed-thumbnail";
         }
 
-        if (AudioFormat != null)
+        if (AudioFormat == null)
         {
-            var argAudioFormat = "";
-            switch (AudioFormat)
-            {
-                case AudioFormats.Best:
-                    argAudioFormat = "best";
-                    break;
-                case AudioFormats.Acc:
-                    argAudioFormat = "acc";
-                    break;
-                case AudioFormats.Flac:
-                    argAudioFormat = "flac";
-                    break;
-                case AudioFormats.M4a:
-                    argAudioFormat = "m4a";
-                    break;
-                case AudioFormats.Mp3:
-                    argAudioFormat = "mp3";
-                    break;
-                case AudioFormats.Opus:
-                    argAudioFormat = "opus";
-                    break;
-                case AudioFormats.Vorbis:
-                    argAudioFormat = "vorbis";
-                    break;
-                case AudioFormats.Wav:
-                    argAudioFormat = "wav";
-                    break;
-                default:
-                    argAudioFormat = "best";
-                    break;
-            }
-
-            args += " --audio-format " + argAudioFormat;
+            return args + " " + Url;
         }
+
+        var argAudioFormat = AudioFormat switch
+        {
+            AudioFormats.Best => "best",
+            AudioFormats.Acc => "acc",
+            AudioFormats.Flac => "flac",
+            AudioFormats.M4a => "m4a",
+            AudioFormats.Mp3 => "mp3",
+            AudioFormats.Opus => "opus",
+            AudioFormats.Vorbis => "vorbis",
+            AudioFormats.Wav => "wav",
+            _ => "best"
+        };
+
+        args += " --audio-format " + argAudioFormat;
         return args + " " + Url;
     }
 

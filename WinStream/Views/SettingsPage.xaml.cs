@@ -38,21 +38,20 @@ public sealed partial class SettingsPage : Page
         var hWnd = WinRT.Interop.WindowNative.GetWindowHandle(App.MainWindow);
         WinRT.Interop.InitializeWithWindow.Initialize(folderPicker, hWnd);
         var folder = await folderPicker.PickSingleFolderAsync();
-        if (folder != null && folder.Path != null)
+        if (folder == null || folder.Path == null)
         {
-            await ViewModel.AppendSource(folder.Path);
-            DataSourcesListView.ItemsSource = ViewModel.GetDataSourcesList();
+            return;
         }
+
+        await ViewModel.AppendSource(folder.Path);
+        DataSourcesListView.ItemsSource = ViewModel.GetDataSourcesList();
     }
 
     public async void RemoveDataSource(object sender, RoutedEventArgs e)
     {
-        if (DataSourcesListView.SelectedItem != null)
+        if (DataSourcesListView.SelectedItem is DataSource dataSource)
         {
-            if (DataSourcesListView.SelectedItem is DataSource dataSource)
-            {
-                await ViewModel.RemoveSource(dataSource.Path);
-            }
+            await ViewModel.RemoveSource(dataSource.Path);
         }
         DataSourcesListView.ItemsSource = ViewModel.GetDataSourcesList();
     }

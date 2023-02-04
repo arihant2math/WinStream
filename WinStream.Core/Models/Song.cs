@@ -2,7 +2,7 @@
 
 public class Song
 {
-    public static readonly Song None = new Song(); 
+    public static readonly Song None = new(); 
     public string Name
     {
         get;

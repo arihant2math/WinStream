@@ -68,41 +68,47 @@ public class NavigationViewHeaderBehavior : Behavior<NavigationView>
 
     private void OnNavigated(object sender, NavigationEventArgs e)
     {
-        if (sender is Frame frame && frame.Content is Page page)
+        if (sender is not Frame { Content: Page page })
         {
-            _currentPage = page;
-
-            UpdateHeader();
-            UpdateHeaderTemplate();
+            return;
         }
+
+        _currentPage = page;
+
+        UpdateHeader();
+        UpdateHeaderTemplate();
     }
 
     private void UpdateHeader()
     {
-        if (_currentPage != null)
+        if (_currentPage == null)
         {
-            var headerMode = GetHeaderMode(_currentPage);
-            if (headerMode == NavigationViewHeaderMode.Never)
-            {
-                AssociatedObject.Header = null;
-                AssociatedObject.AlwaysShowHeader = false;
-            }
-            else
-            {
-                var headerFromPage = GetHeaderContext(_currentPage);
-                AssociatedObject.Header = headerFromPage ?? DefaultHeader;
+            return;
+        }
 
-                AssociatedObject.AlwaysShowHeader = headerMode == NavigationViewHeaderMode.Always;
-            }
+        var headerMode = GetHeaderMode(_currentPage);
+        if (headerMode == NavigationViewHeaderMode.Never)
+        {
+            AssociatedObject.Header = null;
+            AssociatedObject.AlwaysShowHeader = false;
+        }
+        else
+        {
+            var headerFromPage = GetHeaderContext(_currentPage);
+            AssociatedObject.Header = headerFromPage ?? DefaultHeader;
+
+            AssociatedObject.AlwaysShowHeader = headerMode == NavigationViewHeaderMode.Always;
         }
     }
 
     private void UpdateHeaderTemplate()
     {
-        if (_currentPage != null)
+        if (_currentPage == null)
         {
-            var headerTemplate = GetHeaderTemplate(_currentPage);
-            AssociatedObject.HeaderTemplate = headerTemplate ?? DefaultHeaderTemplate;
+            return;
         }
+
+        var headerTemplate = GetHeaderTemplate(_currentPage);
+        AssociatedObject.HeaderTemplate = headerTemplate ?? DefaultHeaderTemplate;
     }
 }

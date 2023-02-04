@@ -36,11 +36,13 @@ public class NavigationViewService : INavigationViewService
 
     public void UnregisterEvents()
     {
-        if (_navigationView != null)
+        if (_navigationView == null)
         {
-            _navigationView.BackRequested -= OnBackRequested;
-            _navigationView.ItemInvoked -= OnItemInvoked;
+            return;
         }
+
+        _navigationView.BackRequested -= OnBackRequested;
+        _navigationView.ItemInvoked -= OnItemInvoked;
     }
 
     public NavigationViewItem? GetSelectedItem(Type pageType)

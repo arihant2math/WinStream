@@ -6,12 +6,13 @@ namespace WinStream.Services;
 public class PlaylistDataService
 {
     private const string SettingsKey = "playlists";
-    ILocalSettingsService _localSettingsService;
+    private readonly ILocalSettingsService _localSettingsService;
     private List<Playlist> _playlists;
     
     public PlaylistDataService(ILocalSettingsService localSettingsService)
     {
         _localSettingsService = localSettingsService;
+        _playlists = new List<Playlist>();
     }
 
     public async Task InitializeAsync()
@@ -28,20 +29,23 @@ public class PlaylistDataService
     private async Task<List<Playlist>> LoadPlaylistsFromSettingsAsync()
     {
         var result = await _localSettingsService.ReadSettingAsync<string>(SettingsKey);
-        if (result != null)
+        if (result == null)
         {
-            var split = result.Split("\n");
-            var playlists = new List<Playlist>();
-            foreach (var playlist in split)
-            {
-                var songs = playlist.Split("\t");
-                var p = new Playlist();
-                foreach (var path in songs)
-                {
-                    p.Songs.Add(Song.FromPath(path));
-                }
-            }
+            return new List<Playlist>();
         }
-        return new List<Playlist>();
+
+        var split = result.Split("\n");
+        var playlists = new List<Playlist>();
+        foreach (var playlist in split)
+        {
+            var songs = playlist.Split("\t");
+            var p = new Playlist();
+            foreach (var path in songs)
+            {
+                p.Songs.Add(Song.FromPath(path));
+            }
+            playlists.Add(p);
+        }
+        return playlists;
     }
 }

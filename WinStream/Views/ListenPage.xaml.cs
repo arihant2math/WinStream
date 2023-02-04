@@ -23,17 +23,23 @@ public sealed partial class ListDetailsPage : Page
 
     private void ListDetailsViewControl_OnSelectionChanged(object sender, SelectionChangedEventArgs e)
     {
-        if (sender is ListDetailsView listDetailsView)
+        if (sender is not ListDetailsView listDetailsView)
         {
-            if (listDetailsView != null)
-            {
-                if (listDetailsView.SelectedItem is Song song)
-                {
-                    var uri = new Uri(song.Location);
-                    PlayerElement.Source = MediaSource.CreateFromUri(uri);
-                    PlayerElement.MediaPlayer.Play();
-                }
-            }
+            return;
         }
+
+        if (listDetailsView == null)
+        {
+            return;
+        }
+
+        if (listDetailsView.SelectedItem is not Song song)
+        {
+            return;
+        }
+
+        var uri = new Uri(song.Location);
+        PlayerElement.Source = MediaSource.CreateFromUri(uri);
+        PlayerElement.MediaPlayer.Play();
     }
 }
