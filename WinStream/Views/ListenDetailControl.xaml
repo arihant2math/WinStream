@@ -1,0 +1,39 @@
+﻿<UserControl
+    x:Class="WinStream.Views.ListDetailsDetailControl"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d">
+    <ScrollViewer
+        Name="ForegroundElement"
+        HorizontalAlignment="Stretch"
+        VerticalScrollMode="Enabled"
+        IsTabStop="True">
+        <StackPanel HorizontalAlignment="Left">
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Stretch">
+                <TextBlock
+                    Margin="{StaticResource SmallLeftMargin}"
+                    VerticalAlignment="Center"
+                    Text="{x:Bind ListDetailsMenuItem.Name, Mode=OneWay}"
+                    Style="{ThemeResource TitleTextBlockStyle}" />
+            </StackPanel>
+            <StackPanel Padding="0,15,0,0">
+                <TextBlock Text="Composer" Style="{StaticResource DetailSubTitleStyle}" />
+
+                <TextBlock Text="{x:Bind ListDetailsMenuItem.Composer, Mode=OneWay}" Style="{StaticResource DetailBodyBaseMediumStyle}" />
+
+                <TextBlock
+                    Margin="{StaticResource SmallTopMargin}"
+                    Text="File Location"
+                    Style="{StaticResource DetailSubTitleStyle}" />
+                <TextBlock Text="{x:Bind ListDetailsMenuItem.Location, Mode=OneWay}" Style="{StaticResource DetailBodyBaseMediumStyle}" />
+                <TextBlock
+                    Margin="{StaticResource SmallTopMargin}"
+                    Text="Date Published"
+                    Style="{StaticResource DetailSubTitleStyle}" />
+                <TextBlock Text="{x:Bind ListDetailsMenuItem.Published, Mode=OneWay}" Style="{StaticResource DetailBodyBaseMediumStyle}" />
+            </StackPanel>
+        </StackPanel>
+    </ScrollViewer>
+</UserControl>
