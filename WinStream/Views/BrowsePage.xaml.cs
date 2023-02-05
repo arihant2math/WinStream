@@ -6,6 +6,8 @@ using WinStream.ViewModels;
 using Windows.Storage;
 using System.Diagnostics;
 using Microsoft.Graphics.Canvas.Text;
+using WinStream.Core.Downloader;
+using WinStream.Core.Services;
 
 namespace WinStream.Views;
 
@@ -27,7 +29,7 @@ public sealed partial class BrowsePage : Page
 
     private async void Download(object sender, RoutedEventArgs routedEventArgs)
     {
-        var ensureCorrectInstallation = Downloader.EnsureCorrectInstallation();
+        var ensureCorrectInstallation = DownloaderUtil.EnsureCorrectInstallation();
         ProgressBar.Visibility = Visibility.Visible;
         var filePicker = new FileSavePicker
         {
@@ -53,12 +55,12 @@ public sealed partial class BrowsePage : Page
             var url = ViewModel.GetUrl();
             if (url != null)
             {
-                await Downloader.EnsureCorrectInstallation();
-                var downloader = new Downloader
+                await DownloaderUtil.EnsureCorrectInstallation();
+                var downloader = new DownloaderService
                 {
                     Url = url,
                     Output = file.ToString(),
-                    AudioFormat = Downloader.AudioFormats.Mp3,
+                    AudioFormat = AudioFormats.Mp3,
                     AudioOnly = true,
                     EmbedThumbnail = true
                 };
