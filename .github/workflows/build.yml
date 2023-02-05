@@ -63,5 +63,5 @@ jobs:
     - name: Upload MSIX package
       uses: actions/upload-artifact@v2
       with:
-        name: MSIX Package
+        name: MSIX Package ${{ matrix.platform }} ${{ matrix.configuration }}
         path: ${{ env.Project_Name }}/Packages
