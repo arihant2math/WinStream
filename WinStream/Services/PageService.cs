@@ -17,6 +17,7 @@ public class PageService : IPageService
         Configure<ListenListDetailsViewModel, ListDetailsPage>();
         Configure<BrowseViewModel, BrowsePage>();
         Configure<SettingsViewModel, SettingsPage>();
+        Configure<PlaylistListDetailsViewModel, PlaylistPage>();
     }
 
     public Type GetPageType(string key)

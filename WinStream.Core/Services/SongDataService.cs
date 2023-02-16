@@ -18,7 +18,9 @@ public class SongDataService : ISongDataService
     private IEnumerable<Song> AllSongs()
     {
         IEnumerable<Song> allSongs = new List<Song>();
-        return (from p in _paths where Directory.Exists(p) select Directory.GetFiles(p)).Aggregate(allSongs, (current1, fileEntries) => fileEntries.Where(file => file.EndsWith(".mp3") || file.EndsWith(".wav") || file.EndsWith(".m4a")).Aggregate(current1, (current, file) => current.Concat(new[] { Song.FromPath(file) })));
+        return (from p in _paths where Directory.Exists(p) select Directory.GetFiles(p)).Aggregate(allSongs, (current1, fileEntries) => 
+        fileEntries.Where(file => file.EndsWith(".mp3") || file.EndsWith(".wav") || file.EndsWith(".m4a")).Aggregate(current1, (current, file) => 
+        current.Concat(new[] { Song.FromPath(file) })));
     }
     
     public async Task<IEnumerable<Song>> GetListDetailsDataAsync(List<string> paths)

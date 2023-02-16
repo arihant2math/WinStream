@@ -1,0 +1,48 @@
+<UserControl
+    x:Class="WinStream.Views.PlaylistDetailControl"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:models="using:WinStream.Core.Models"
+    mc:Ignorable="d">
+    <UserControl.Resources>
+        <DataTemplate x:Key="SongSelectionListViewTemplate" x:DataType="models:Song">
+            <TextBlock Text="{x:Bind Name}" x:Phase="1" Margin="0,5,0,5"/>
+        </DataTemplate>
+    </UserControl.Resources>
+    <ScrollViewer
+        Name="ForegroundElement"
+        HorizontalAlignment="Stretch"
+        VerticalScrollMode="Enabled"
+        IsTabStop="True">
+        <StackPanel HorizontalAlignment="Left">
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Stretch">
+                <TextBlock
+                    Margin="{StaticResource SmallLeftMargin}"
+                    VerticalAlignment="Center"
+                    Text="{x:Bind ListDetailsMenuItem.Name, Mode=OneWay}"
+                    Style="{ThemeResource TitleTextBlockStyle}" />
+            </StackPanel>
+            <ListView
+                Name="SongSelectionListView"
+                ItemTemplate="{StaticResource SongSelectionListViewTemplate}"
+                ItemsSource="{x:Bind ListDetailsMenuItem.Songs, Mode=OneWay}"
+                SelectedItem="{x:Bind  ListDetailsMenuItem.Selected, Mode=TwoWay}"
+                SelectionChanged="SongSelectionChanged"
+                BorderThickness="1"
+                BorderBrush="{ThemeResource SystemControlForegroundBaseMediumLowBrush}"
+                Width="350"
+                Height="400"
+                HorizontalAlignment="Left">
+                <ListView.Template>
+                    <ControlTemplate>
+                        <Border CornerRadius="10" BorderThickness="1" BorderBrush="{StaticResource SystemControlBackgroundBaseMediumRevealBorderBrush}">
+                            <ItemsPresenter></ItemsPresenter>
+                        </Border>
+                    </ControlTemplate>
+                </ListView.Template>
+            </ListView>
+        </StackPanel>
+    </ScrollViewer>
+</UserControl>

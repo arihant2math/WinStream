@@ -195,4 +195,7 @@
   <data name="Settings_Sources.Text" xml:space="preserve">
     <value>Sources</value>
   </data>
+  <data name="Shell_Playlist.Content" xml:space="preserve">
+    <value>Playlist</value>
+  </data>
 </root>

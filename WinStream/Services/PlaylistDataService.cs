@@ -3,7 +3,7 @@ using WinStream.Core.Models;
 
 namespace WinStream.Services;
 
-public class PlaylistDataService
+public class PlaylistDataService : IPlaylistDataService
 {
     private const string SettingsKey = "playlists";
     private readonly ILocalSettingsService _localSettingsService;
@@ -23,29 +23,40 @@ public class PlaylistDataService
     
     public List<Playlist> GetPlaylists()
     {
-        return new List<Playlist>();
+        return _playlists;
     }
     
     private async Task<List<Playlist>> LoadPlaylistsFromSettingsAsync()
     {
-        var result = await _localSettingsService.ReadSettingAsync<string>(SettingsKey);
-        if (result == null)
-        {
-            return new List<Playlist>();
-        }
+        var result = await _localSettingsService.SerializedReadSettingAsync<List<Playlist>>(SettingsKey);
+        return result ?? new List<Playlist>();
+    }
 
-        var split = result.Split("\n");
-        var playlists = new List<Playlist>();
-        foreach (var playlist in split)
-        {
-            var songs = playlist.Split("\t");
-            var p = new Playlist();
-            foreach (var path in songs)
-            {
-                p.Songs.Add(Song.FromPath(path));
-            }
-            playlists.Add(p);
-        }
-        return playlists;
+    private async Task SavePlaylistsAsync(List<Playlist> playlists)
+    {
+        await _localSettingsService.SerializedSaveSettingAsync<List<Playlist>>(SettingsKey, playlists);
+    }
+
+    public async Task UpdatePlaylists()
+    {
+        _playlists = await LoadPlaylistsFromSettingsAsync();
+    }
+
+    public async Task AddPlaylist(string name)
+    {
+        _playlists.Add(new Playlist {Name = name, Songs = new List<Song>()});
+        await SavePlaylistsAsync(_playlists);
+    }
+
+    public async Task AddPlaylist(Playlist playlist)
+    {
+        _playlists.Add(playlist);
+        await SavePlaylistsAsync(_playlists);
+    }
+
+    public async Task DeletePlaylist(string name)
+    {
+        _playlists.Remove(new Playlist { Name = name });
+        await SavePlaylistsAsync(_playlists);
     }
 }

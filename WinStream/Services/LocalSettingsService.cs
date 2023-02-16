@@ -3,7 +3,7 @@ using Microsoft.Extensions.Options;
 
 using Windows.ApplicationModel;
 using Windows.Storage;
-
+using Newtonsoft.Json;
 using WinStream.Contracts.Services;
 using WinStream.Core.Contracts.Services;
 using WinStream.Core.Helpers;
@@ -71,6 +71,13 @@ public class LocalSettingsService : ILocalSettingsService
         return default;
     }
 
+    public async Task<T?> SerializedReadSettingAsync<T>(string key) where T : new()
+    {
+        var output = await ReadSettingAsync<string>(key);
+        return output == null ? new T() : JsonConvert.DeserializeObject<T>(output);
+    }
+
+
     public async Task SaveSettingAsync<T>(string key, T value)
     {
         if (RuntimeHelper.IsMSIX)
@@ -85,5 +92,10 @@ public class LocalSettingsService : ILocalSettingsService
 
             await Task.Run(() => _fileService.Save(_applicationDataFolder, _localsettingsFile, _settings));
         }
+    }
+
+    public async Task SerializedSaveSettingAsync<T>(string key, object value)
+    {
+        await SaveSettingAsync(key, JsonConvert.SerializeObject(value));
     }
 }

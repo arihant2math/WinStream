@@ -6,8 +6,29 @@ public class Playlist
     {
         get; set;
     }
-    public ICollection<Song> Songs
+    public List<Song> Songs
     {
         get; set;
+    }
+
+    public Song Selected
+    {
+        get;
+        set;
+    }
+
+    public override int GetHashCode()
+    {
+        return Name.GetHashCode();
+    }
+
+    public override bool Equals(object obj)
+    {
+        if (obj == null || this.GetType() != obj.GetType())
+        {
+            return false;
+        }
+        var p = (Playlist) obj;
+        return p.Name == Name;
     }
 }

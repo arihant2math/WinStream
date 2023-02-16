@@ -13,14 +13,16 @@ public class ActivationService : IActivationService
     private readonly IEnumerable<IActivationHandler> _activationHandlers;
     private readonly IThemeSelectorService _themeSelectorService;
     private readonly IDataSourceSelectorService _dataSourceSelectorService;
+    private readonly IPlaylistDataService _playlistDataService;
     private UIElement? _shell = null;
 
-    public ActivationService(ActivationHandler<LaunchActivatedEventArgs> defaultHandler, IEnumerable<IActivationHandler> activationHandlers, IThemeSelectorService themeSelectorService, IDataSourceSelectorService dataSourceSelectorService)
+    public ActivationService(ActivationHandler<LaunchActivatedEventArgs> defaultHandler, IEnumerable<IActivationHandler> activationHandlers, IThemeSelectorService themeSelectorService, IDataSourceSelectorService dataSourceSelectorService, IPlaylistDataService playlistDataService)
     {
         _defaultHandler = defaultHandler;
         _activationHandlers = activationHandlers;
         _themeSelectorService = themeSelectorService;
         _dataSourceSelectorService = dataSourceSelectorService;
+        _playlistDataService = playlistDataService;
     }
 
     public async Task ActivateAsync(object activationArgs)
@@ -64,6 +66,7 @@ public class ActivationService : IActivationService
     {
         await _themeSelectorService.InitializeAsync().ConfigureAwait(false);
         await _dataSourceSelectorService.InitializeAsync().ConfigureAwait(false);
+        await _playlistDataService.InitializeAsync().ConfigureAwait(false);
         await Task.CompletedTask;
     }
 

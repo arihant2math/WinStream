@@ -56,35 +56,57 @@ public class Song
     public static Song FromPath(string file)
     {
         var name = Path.GetFileName(file);
-        var metadata = TagLib.File.Create(Path.GetFullPath(file));
-        var songName = name.Replace(".mp3", "");
-        var sTitle = metadata.Tag.Title;
-        if (sTitle != null)
+        try
         {
-            sTitle = sTitle.Replace(" ", "");
-            sTitle = sTitle.Replace("\n", "");
-            if (sTitle != "")
+            var metadata = TagLib.File.Create(Path.GetFullPath(file));
+            var songName = name.Replace(".mp3", "").Replace(".wav", "").Replace(".m4a", "");
+            var sTitle = metadata.Tag.Title;
+            if (sTitle != null)
             {
-                songName = metadata.Tag.Title;
+                sTitle = sTitle.Replace(" ", "");
+                sTitle = sTitle.Replace("\n", "");
+                if (sTitle != "")
+                {
+                    songName = metadata.Tag.Title;
+                }
             }
-        }
-        var composer = metadata.Tag.Composers.Length != 0 ? string.Join(", ", metadata.Tag.Composers) : "Unknown";
+            var composer = metadata.Tag.Composers.Length != 0 ? string.Join(", ", metadata.Tag.Composers) : "Unknown";
 
-        var album = "None";
-        if (!string.IsNullOrEmpty(metadata.Tag.Album))
-        {
-            album = metadata.Tag.Album;
-        }
+            var album = "None";
+            if (!string.IsNullOrEmpty(metadata.Tag.Album))
+            {
+                album = metadata.Tag.Album;
+            }
 
-        var performer = composer;
-        if (metadata.Tag.PerformersRole.Length != 0)
-        {
-            performer = string.Join(", ", metadata.Tag.PerformersRole);
+            var performer = composer;
+            if (metadata.Tag.PerformersRole.Length != 0)
+            {
+                performer = string.Join(", ", metadata.Tag.PerformersRole);
+            }
+            else if (metadata.Tag.AlbumArtists.Length != 0)
+            {
+                performer = string.Join(", ", metadata.Tag.AlbumArtists);
+            }
+            return new Song() { Composer = composer, Name = songName, Published = DateTime.Today, Location = file, Album = album, Performer = performer };
         }
-        else if (metadata.Tag.AlbumArtists.Length != 0)
+        catch (TagLib.CorruptFileException)
         {
-            performer = string.Join(", ", metadata.Tag.AlbumArtists);
+            return new Song() { Composer = "unknown", Name = name.Replace(".mp3", "").Replace(".wav", "").Replace(".m4a", ""), Published = DateTime.Today, Location = file, Album = "Unknown", Performer = "Unknown" };
         }
-        return new Song() { Composer = composer, Name = songName, Published = DateTime.Today, Location = file, Album = album, Performer = performer };
+    }
+
+    public override bool Equals(object obj)
+    {
+        if (obj == null || this.GetType() != obj.GetType())
+        {
+            return false;
+        }
+        var s = (Song) obj;
+        return s.Location == Location;
+    }
+
+    public override int GetHashCode()
+    {
+        return Location.GetHashCode();
     }
 }

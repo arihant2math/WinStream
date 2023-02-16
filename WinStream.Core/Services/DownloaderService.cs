@@ -108,13 +108,19 @@ public class DownloaderService : IDownloaderService
     {
         if (Url != null && Output != null)
         {
+            var path = System.Environment.GetEnvironmentVariable("path");
+            if (!path.Contains(ExeFolder))
+            {
+                path += ";" + ExeFolder;
+            }
+
+            Environment.SetEnvironmentVariable("path", path);
             var process = new Process();
             process.StartInfo.UseShellExecute = false;
             process.StartInfo.RedirectStandardOutput = true;
             process.StartInfo.WindowStyle = ProcessWindowStyle.Normal;
-            process.StartInfo.FileName = @"C:\Windows\System32\cmd.exe";
-            Debug.WriteLine("/k \"" + YoutubeDlPath + " " + GetArguments() + "\"");
-            process.StartInfo.Arguments = "/k \"" + YoutubeDlPath + " " + GetArguments() + "\"";
+            process.StartInfo.FileName = YoutubeDlPath;
+            process.StartInfo.Arguments = GetArguments();
             process.StartInfo.CreateNoWindow = false;
             process.EnableRaisingEvents = true;
             process.Start();
